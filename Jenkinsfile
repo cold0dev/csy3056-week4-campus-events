@@ -12,7 +12,7 @@ pipeline {
             steps { sh 'python3 scripts/check_app.py' }
         }
         stage('Package Release') {
-            steps { sh 'python3 scripts/build_releases.py' }
+            steps { sh 'python3 scripts/build_release.py' }
         }
         stage('Archive Release') {
             steps { archiveArtifacts artifacts: 'dist/*.zip', fingerprint: true }
