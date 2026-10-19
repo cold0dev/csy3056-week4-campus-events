@@ -14,9 +14,14 @@ pipeline {
 	    stage('Package Release') {
 	        steps { sh 'python3 scripts/build_release.py' }
 	    }
+        stage('Build Metadata') {
+            steps {
+                sh 'echo "Build number: $BUILD_NUMBER"  >  build-info.txt'
+            }
+        }
         stage('Archive Release') {
             steps {
-                archiveArtifacts artifacts: 'dist/campus-events-1.1.0.zip',
+                archiveArtifacts artifacts: 'dist/campus-events-1.1.0.zip, build-info.txt',
                                  fingerprint: true,
                                  allowEmptyArchive: false,
                                  onlyIfSuccessful: true
