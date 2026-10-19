@@ -6,25 +6,21 @@ pipeline {
             steps { checkout scm }
         }
         stage('Setup') {
-            steps { sh 'python3 --version' }
+            steps { bat 'python --version' }
         }
         stage('Validate Application') {
-            steps { sh 'python3 scripts/check_app.py' }
+            steps { bat 'python scripts/check_app.py' }
         }
-	    stage('Package Release') {
-	        steps { sh 'python3 scripts/build_release.py' }
-	    }
-        stage('Build Metadata') {
-            steps {
-                sh 'echo "Build number: $BUILD_NUMBER"  >  build-info.txt'
-            }
+        stage('Package Release') {
+            steps { bat 'python scripts/build_releases.py' }
         }
         stage('Archive Release') {
+            steps { archiveArtifacts artifacts: 'dist/*.zip', fingerprint: true }
+        }
+        stage('Build Metadata') {
             steps {
-                archiveArtifacts artifacts: 'dist/campus-events-1.1.0.zip, build-info.txt',
-                                 fingerprint: true,
-                                 allowEmptyArchive: false,
-                                 onlyIfSuccessful: true
+                bat 'echo Build Number: %BUILD_NUMBER% > build-info.txt'
+                archiveArtifacts artifacts: 'build-info.txt'
             }
         }
     }
