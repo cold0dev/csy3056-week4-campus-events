@@ -6,13 +6,13 @@ pipeline {
             steps { checkout scm }
         }
         stage('Setup') {
-            steps { bat 'python --version' }
+            steps { sh 'python3 --version' }
         }
         stage('Validate Application') {
-            steps { bat 'python scripts/check_app.py' }
+            steps { sh 'python3 scripts/check_app.py' }
         }
         stage('Package Release') {
-            steps { bat 'python scripts/build_releases.py' }
+            steps { sh 'python3 scripts/build_releases.py' }
         }
         stage('Archive Release') {
             steps { archiveArtifacts artifacts: 'dist/*.zip', fingerprint: true }
